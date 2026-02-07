@@ -9,4 +9,5 @@ func SetupPublicRoutes(router *gin.Engine) {
 	router.GET("/movies", controllers.GetMovies())
 	router.POST("/registerUser", controllers.RegisterUser())
 	router.POST("/login", controllers.LoginUser())
+	router.PATCH("updatereview/:imdb_id", controllers.AdminReviewUpdate())
 }

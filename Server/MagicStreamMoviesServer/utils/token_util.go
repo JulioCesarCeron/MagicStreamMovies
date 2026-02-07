@@ -67,7 +67,7 @@ func UpdateAllTokens(userId, token, refreshToken string) (err error) {
 		"$set": bson.M{
 			"token":         token,
 			"refresh_token": refreshToken,
-			"updated_at":     updateAt,
+			"updated_at":    updateAt,
 		},
 	}
 
@@ -101,7 +101,6 @@ func ValidateToken(tokenString string) (*SignedDetails, error) {
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(SECRET_KEY), nil
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -115,4 +114,20 @@ func ValidateToken(tokenString string) (*SignedDetails, error) {
 	}
 
 	return claims, nil
+}
+
+func GetUserIdFromContext(c *gin.Context) (string, error) {
+	userId, exists := c.Get("userId")
+
+	if !exists {
+		return "", errors.New("userId does not exists in this context")
+	}
+
+	id, ok := userId.(string)
+
+	if !ok {
+		return "", errors.New("unable to retrive userId")
+	}
+
+	return id, nil
 }
