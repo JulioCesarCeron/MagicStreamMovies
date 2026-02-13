@@ -8,6 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
+	
 )
 
 func Connect() *mongo.Client {
@@ -34,9 +35,7 @@ func Connect() *mongo.Client {
 	return client
 }
 
-var Client *mongo.Client = Connect()
-
-func OpenCollection(collectionName string) *mongo.Collection {
+func OpenCollection(collectionName string, client *mongo.Client) *mongo.Collection {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Println("Warning: .env files could not be found.")
@@ -44,7 +43,7 @@ func OpenCollection(collectionName string) *mongo.Collection {
 
 	databaseName := os.Getenv("DATABASE_NAME")
 
-	collection := Client.Database(databaseName).Collection(collectionName)
+	collection := client.Database(databaseName).Collection(collectionName)
 
 	if collection == nil {
 		return nil
